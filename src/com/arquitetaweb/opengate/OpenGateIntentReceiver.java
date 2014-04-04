@@ -1,12 +1,11 @@
 package com.arquitetaweb.opengate;
 
-import com.arquitetaweb.opengate.R;
-
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.widget.RemoteViews;
-import android.widget.Toast;
+
+import com.arquitetaweb.util.ApiController;
 
 public class OpenGateIntentReceiver extends BroadcastReceiver {
 
@@ -21,12 +20,11 @@ public class OpenGateIntentReceiver extends BroadcastReceiver {
 	}
 
 	private void updateWidgetPictureAndButtonListener(Context context) {
-
-		Toast.makeText(context, "Open Gate!!!", Toast.LENGTH_LONG).show();
+		// Toast.makeText(context, "Open Gate!!!", Toast.LENGTH_LONG).show();
 
 		RemoteViews remoteViews = new RemoteViews(context.getPackageName(),
 				R.layout.widget_opengate);
-		remoteViews.setImageViewResource(R.id.widget_image, getImageToSet());
+		remoteViews.setImageViewResource(R.id.widget_image, getImageToSet(context));
 
 		// REMEMBER TO ALWAYS REFRESH YOUR BUTTON CLICK LISTENERS!!!
 		remoteViews.setOnClickPendingIntent(R.id.widget_image,
@@ -36,8 +34,12 @@ public class OpenGateIntentReceiver extends BroadcastReceiver {
 				remoteViews);
 	}
 
-	private int getImageToSet() {
+	private int getImageToSet(Context context) {
 		clickCount++;
+
+		ApiController api = new ApiController(context);
+		api.sincronizar("tempo");
+
 		return clickCount % 2 == 0 ? R.drawable.open : R.drawable.close;
 	}
 }
